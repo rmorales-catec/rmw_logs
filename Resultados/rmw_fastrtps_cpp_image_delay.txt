@@ -1,0 +1,38 @@
+average delay: 0.023
+	min: 0.008s max: 0.041s std dev: 0.00757s window: 23
+average delay: 0.027
+	min: 0.008s max: 0.051s std dev: 0.00967s window: 30
+average delay: 0.033
+	min: 0.017s max: 0.054s std dev: 0.01023s window: 30
+average delay: 0.029
+	min: 0.014s max: 0.054s std dev: 0.00864s window: 30
+average delay: 0.027
+	min: 0.014s max: 0.050s std dev: 0.00820s window: 30
+average delay: 0.028
+	min: 0.007s max: 0.050s std dev: 0.01028s window: 30
+average delay: 0.031
+	min: 0.008s max: 0.167s std dev: 0.02704s window: 30
+average delay: 0.026
+	min: 0.008s max: 0.043s std dev: 0.00810s window: 30
+average delay: 0.027
+	min: 0.014s max: 0.054s std dev: 0.00808s window: 30
+average delay: 0.026
+	min: 0.009s max: 0.050s std dev: 0.00864s window: 30
+average delay: 0.026
+	min: 0.007s max: 0.047s std dev: 0.00787s window: 30
+average delay: 0.028
+	min: 0.010s max: 0.054s std dev: 0.01067s window: 30
+average delay: 0.027
+	min: 0.002s max: 0.054s std dev: 0.01099s window: 30
+average delay: 0.027
+	min: 0.002s max: 0.050s std dev: 0.01055s window: 30
+average delay: 0.028
+	min: 0.004s max: 0.065s std dev: 0.01252s window: 30
+average delay: 0.028
+	min: 0.004s max: 0.051s std dev: 0.00958s window: 30
+average delay: 0.030
+	min: 0.009s max: 0.052s std dev: 0.00937s window: 30
+average delay: 0.031
+	min: 0.011s max: 0.057s std dev: 0.01071s window: 30
+average delay: 0.028
+	min: 0.007s max: 0.057s std dev: 0.01057s window: 30
