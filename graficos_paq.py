@@ -328,6 +328,6 @@ def plot_bar(values, labels, ylabel, title, fmt="int", filename=None):
     plt.show()
 
 # 📊 Graficar todo
-plot_bar(avg_sizes, rmw_names, "Tamaño medio (bytes)", "📊 Tamaño medio de paquetes", fmt="float", filename="avg_packet_size.png")
-plot_bar(packet_counts, rmw_names, "Número de paquetes", "📦 Total de paquetes enviados", fmt="int", filename="packet_count.png")
-plot_bar(total_bytes, rmw_names, "Total de bytes", "📡 Total de bytes transmitidos", fmt="int", filename="total_bytes.png")
+plot_bar(avg_sizes, rmw_names, "Tamaño medio (bytes)", "Tamaño medio de paquetes", fmt="float", filename="avg_packet_size.png")
+plot_bar(packet_counts, rmw_names, "Número de paquetes", "Total de paquetes enviados", fmt="int", filename="packet_count.png")
+plot_bar(total_bytes, rmw_names, "Total de bytes", "Total de bytes transmitidos", fmt="int", filename="total_bytes.png")
