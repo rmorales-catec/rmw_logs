@@ -1,7 +1,7 @@
 #!/bin/zsh
 
 # 🚀 Lista de RMWs a probar
-RMW_LIST=("rmw_fastrtps_cpp" "rmw_cyclonedds_cpp" "rmw_zenoh_cpp")
+RMW_LIST=("rmw_zenoh_cpp" "rmw_fastrtps_cpp" "rmw_cyclonedds_cpp")
 
 # 🧪 Configuración del test
 # TOPIC_NAME="/image_compressed"
