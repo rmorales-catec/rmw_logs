@@ -1,0 +1,116 @@
+average delay: -0.256
+	min: -0.278s max: -0.222s std dev: 0.01687s window: 28
+average delay: -0.252
+	min: -0.279s max: -0.211s std dev: 0.01958s window: 30
+average delay: -0.162
+	min: -0.269s max: -0.033s std dev: 0.06247s window: 30
+average delay: -0.039
+	min: -0.103s max: 0.024s std dev: 0.03514s window: 30
+average delay: -0.159
+	min: -0.260s max: -0.076s std dev: 0.04846s window: 30
+average delay: -0.228
+	min: -0.285s max: -0.124s std dev: 0.04272s window: 30
+average delay: -0.255
+	min: -0.284s max: -0.219s std dev: 0.02285s window: 30
+average delay: -0.254
+	min: -0.284s max: -0.208s std dev: 0.02271s window: 30
+average delay: -0.256
+	min: -0.282s max: -0.225s std dev: 0.01965s window: 30
+average delay: -0.258
+	min: -0.281s max: -0.223s std dev: 0.01727s window: 30
+average delay: -0.232
+	min: -0.274s max: -0.180s std dev: 0.02563s window: 30
+average delay: -0.204
+	min: -0.262s max: -0.155s std dev: 0.02679s window: 30
+average delay: -0.248
+	min: -0.280s max: -0.198s std dev: 0.02432s window: 30
+average delay: -0.248
+	min: -0.280s max: -0.212s std dev: 0.02272s window: 30
+average delay: -0.254
+	min: -0.281s max: -0.220s std dev: 0.02173s window: 30
+average delay: -0.252
+	min: -0.279s max: -0.204s std dev: 0.02095s window: 30
+average delay: -0.258
+	min: -0.281s max: -0.227s std dev: 0.01784s window: 30
+average delay: -0.256
+	min: -0.278s max: -0.222s std dev: 0.01761s window: 30
+average delay: -0.243
+	min: -0.281s max: -0.194s std dev: 0.02478s window: 30
+average delay: -0.246
+	min: -0.281s max: -0.211s std dev: 0.02475s window: 30
+average delay: -0.248
+	min: -0.282s max: -0.211s std dev: 0.02478s window: 30
+average delay: -0.253
+	min: -0.283s max: -0.215s std dev: 0.02296s window: 30
+average delay: -0.255
+	min: -0.285s max: -0.222s std dev: 0.02231s window: 30
+average delay: -0.250
+	min: -0.282s max: -0.215s std dev: 0.02345s window: 30
+average delay: -0.252
+	min: -0.281s max: -0.215s std dev: 0.02185s window: 30
+average delay: -0.253
+	min: -0.279s max: -0.217s std dev: 0.02073s window: 30
+average delay: -0.256
+	min: -0.280s max: -0.226s std dev: 0.01833s window: 30
+average delay: -0.250
+	min: -0.278s max: -0.206s std dev: 0.02068s window: 30
+average delay: -0.240
+	min: -0.273s max: -0.195s std dev: 0.02365s window: 30
+average delay: -0.241
+	min: -0.277s max: -0.201s std dev: 0.02303s window: 30
+average delay: -0.245
+	min: -0.278s max: -0.208s std dev: 0.02227s window: 30
+average delay: -0.248
+	min: -0.279s max: -0.214s std dev: 0.02290s window: 30
+average delay: -0.253
+	min: -0.281s max: -0.219s std dev: 0.02171s window: 30
+average delay: -0.255
+	min: -0.281s max: -0.223s std dev: 0.02053s window: 30
+average delay: -0.253
+	min: -0.280s max: -0.213s std dev: 0.01999s window: 30
+average delay: -0.255
+	min: -0.278s max: -0.211s std dev: 0.01813s window: 30
+average delay: -0.241
+	min: -0.279s max: -0.206s std dev: 0.02260s window: 30
+average delay: -0.241
+	min: -0.274s max: -0.207s std dev: 0.02272s window: 30
+average delay: -0.245
+	min: -0.279s max: -0.211s std dev: 0.02297s window: 30
+average delay: -0.250
+	min: -0.281s max: -0.212s std dev: 0.02234s window: 30
+average delay: -0.250
+	min: -0.281s max: -0.217s std dev: 0.02040s window: 30
+average delay: -0.255
+	min: -0.280s max: -0.221s std dev: 0.01910s window: 30
+average delay: -0.256
+	min: -0.281s max: -0.194s std dev: 0.01977s window: 30
+average delay: -0.243
+	min: -0.278s max: -0.194s std dev: 0.02403s window: 30
+average delay: -0.238
+	min: -0.271s max: -0.207s std dev: 0.02252s window: 30
+average delay: -0.241
+	min: -0.274s max: -0.211s std dev: 0.02203s window: 30
+average delay: -0.249
+	min: -0.279s max: -0.216s std dev: 0.02267s window: 30
+average delay: -0.253
+	min: -0.280s max: -0.222s std dev: 0.02065s window: 30
+average delay: -0.254
+	min: -0.280s max: -0.217s std dev: 0.02068s window: 30
+average delay: -0.253
+	min: -0.281s max: -0.218s std dev: 0.02108s window: 30
+average delay: -0.254
+	min: -0.280s max: -0.214s std dev: 0.01901s window: 30
+average delay: -0.242
+	min: -0.281s max: -0.205s std dev: 0.02271s window: 30
+average delay: -0.240
+	min: -0.276s max: -0.195s std dev: 0.02449s window: 30
+average delay: -0.240
+	min: -0.272s max: -0.203s std dev: 0.02365s window: 30
+average delay: -0.245
+	min: -0.280s max: -0.203s std dev: 0.02347s window: 30
+average delay: -0.251
+	min: -0.280s max: -0.211s std dev: 0.02193s window: 30
+average delay: -0.255
+	min: -0.281s max: -0.225s std dev: 0.01935s window: 30
+average delay: -0.256
+	min: -0.281s max: -0.223s std dev: 0.01896s window: 30

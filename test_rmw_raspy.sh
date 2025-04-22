@@ -28,12 +28,20 @@ do
     fi
 
     if [ "$RMW" = "rmw_zenoh_cpp" ]; then
+    # Antes de lanzar rmw_zenohd
+        if lsof -i :7447 > /dev/null; then
+            echo "⚠️ El puerto 7447 ya está en uso. Cerrando procesos antiguos..."
+            sudo fuser -k 7447/tcp
+            sleep 2
+        fi
+        
+    	sleep 3
         echo "🔧 Cargando archivo de configuración para Zenoh..."
         export ZENOH_ROUTER_CONFIG_URI=$HOME/Desktop/router_config.json5
         cd ~/ros2_ws
         ros2 run rmw_zenoh_cpp rmw_zenohd &
         ZENOH_PID=$!
-        sleep 2
+        sleep 4
     fi
 
     # Limpiar estado anterior
@@ -60,12 +68,10 @@ do
     sleep 5  # tiempo para que inicien
     echo "Nodo de LiDAR ejecutandose"
 
-    sleep 68
+    sleep 70
 	
     # Finalizar nodos
     echo "🛑 Matando nodos..."
-    # kill $IMAGE_PID
-    # kill $LIVOX_PID
 
     # Cerrar el subscriber (usa cámara) completamente
     pkill -f image_publisher_QoS_compressed
@@ -85,6 +91,7 @@ do
 
     sleep 5
     echo "Prueba con $RMW terminada"
+    sleep 2
 done
 
 echo "✅ Pruebas completadas. Resultados en: $LOG_DIR"

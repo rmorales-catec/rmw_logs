@@ -45,7 +45,7 @@ for RMW in "${RMW_LIST[@]}"; do
         cd ~/ros2_ws
         ros2 run rmw_zenoh_cpp rmw_zenohd &
         ZENOH_PID=$!
-        sleep 1
+        sleep 3
     fi
 
     # Parar el daemon para evitar caché anterior
@@ -75,14 +75,21 @@ for RMW in "${RMW_LIST[@]}"; do
     SUB_PID=$!
     sleep 1
 
-    echo "📏 Midiendo frecuencia y delay..."
+    echo "📏 Midiendo frecuencia y delay de la imagen..."
     timeout ${DURATION}s ros2 topic hz /image_compressed -w 30 | tee "$LOG_DIR/${RMW}_image_hz.txt" &
-    HZ_PID=$!
+    HZ_IMAGE_PID=$!
     timeout ${DURATION}s ros2 topic delay /image_compressed -w 30 | tee "$LOG_DIR/${RMW}_image_delay.txt" &
-    DELAY_PID=$!
+    DELAY_IMAGE_PID=$!
+    echo "📏 Midiendo frecuencia y delay del lidar..."
+    timeout ${DURATION}s ros2 topic hz /livox/lidar -w 30 | tee "$LOG_DIR/${RMW}_lidar_hz.txt" &
+    HZ_LIDAR_PID=$!
+    timeout ${DURATION}s ros2 topic delay /livox/lidar -w 30 | tee "$LOG_DIR/${RMW}_lidar_delay.txt" &
+    DELAY_LIDAR_PID=$!
 
-    wait $HZ_PID
-    wait $DELAY_PID
+    wait $HZ_IMAGE_PID
+    wait $DELAY_IMAGE_PID
+    wait $HZ_LIDAR_PID
+    wait $DELAY_LIDAR_PID
 
     # kill $SUB_PID
     pkill -f image_subscriber_QoS_compressed
@@ -93,8 +100,6 @@ for RMW in "${RMW_LIST[@]}"; do
         echo "⏳ Esperando que image_subscriber termine..."
         sleep 1
     done
-
-echo "✅ Nodo image_subscriber cerrado"
     
     echo "✅ Nodo image_subscriber cerrado"
     kill $RVIZ_PID
@@ -109,3 +114,8 @@ echo "✅ Nodo image_subscriber cerrado"
 done
 
 echo "\n📁 Pruebas completas. Resultados guardados en: $LOG_DIR"
+
+# Graficamos los resultados
+echo "📊 Graficando resultados..."
+cd $HOME/rmw_logs
+python3 graficos_rmw.py
