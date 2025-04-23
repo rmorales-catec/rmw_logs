@@ -42,6 +42,13 @@ for RMW in "${RMW_LIST[@]}"; do
     fi
 
   if [ "$RMW" = "rmw_zenoh_cpp" ]; then
+     # Antes de lanzar rmw_zenohd
+        if lsof -i :7447 > /dev/null; then
+            echo "⚠️ El puerto 7447 ya está en uso. Cerrando procesos antiguos..."
+            sudo fuser -k 7447/tcp
+            sleep 2
+        fi
+        
         echo "🔧 Cargando archivo de configuración para Zenoh..."
         cd ~/ros2_ws
         ros2 run rmw_zenoh_cpp rmw_zenohd &

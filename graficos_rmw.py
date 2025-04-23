@@ -33,12 +33,16 @@ data_image_hz = {}
 data_image_delay = {}
 data_lidar_hz = {}
 data_lidar_delay = {}
+data_lidar_compressed_hz = {}
+data_lidar_compressed_delay = {}
 
 for rmw in rmws:
     data_image_hz[rmw] = parse_file(os.path.join(log_dir, f"{rmw}_image_hz.txt"), mode='hz')
     data_image_delay[rmw] = parse_file(os.path.join(log_dir, f"{rmw}_image_delay.txt"), mode='delay')
     data_lidar_hz[rmw] = parse_file(os.path.join(log_dir, f"{rmw}_lidar_hz.txt"), mode='hz')
     data_lidar_delay[rmw] = parse_file(os.path.join(log_dir, f"{rmw}_lidar_delay.txt"), mode='delay')
+    data_lidar_compressed_hz[rmw] = parse_file(os.path.join(log_dir, f"{rmw}_lidar_compressed_hz.txt"), mode='hz')
+    data_lidar_compressed_delay[rmw] = parse_file(os.path.join(log_dir, f"{rmw}_lidar_compressed_delay.txt"), mode='delay')
 
 # --- Función para graficar ---
 def plot_metric(data, title, ylabel, filename, marker='o', linestyle='--'):
@@ -72,3 +76,7 @@ plot_metric(data_image_delay, "Delay - image topic", "s", "delay_image.png", mar
 # --- Gráficas lidar ---
 plot_metric(data_lidar_hz, "Frecuencia - livox/lidar topic", "Hz", "frecuencia_lidar.png")
 plot_metric(data_lidar_delay, "Delay - livox/lidar topic", "s", "delay_lidar.png", marker='x', linestyle='--')
+
+# --- Gráficas lidar comprimido ---
+plot_metric(data_lidar_compressed_hz, "Frecuencia - livox/lidar/compressed topic", "Hz", "frecuencia_lidar_compressed.png")
+plot_metric(data_lidar_compressed_delay, "Delay - livox/lidar/compressed topic", "s", "delay_lidar_compressed.png", marker='x', linestyle='--')

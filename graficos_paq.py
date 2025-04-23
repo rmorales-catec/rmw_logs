@@ -267,9 +267,12 @@ import os
 import matplotlib.pyplot as plt
 
 RMW_FILES = [
-    "rmw_fastrtps_cpp.pcap",
-    "rmw_cyclonedds_cpp.pcap",
-    "rmw_zenoh_cpp.pcap"
+    "rmw_fastrtps_cpp1.pcap",
+    "rmw_cyclonedds_cpp1.pcap",
+    "rmw_zenoh_cpp1.pcap",
+    "rmw_fastrtps_cpp2.pcap",
+    "rmw_cyclonedds_cpp2.pcap",
+    "rmw_zenoh_cpp2.pcap"
 ]
 
 LOG_DIR = os.path.expanduser("~/rmw_logs/Resultados")
