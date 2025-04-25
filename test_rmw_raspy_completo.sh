@@ -24,10 +24,11 @@ do
 
     if [ "$RMW" = "rmw_cyclonedds_cpp" ]; then
         echo "🔧 Cargando archivo de configuración para Cyclone DDS..."
-        export CYCLONEDDS_URI=file://$HOME/Desktop/cyclonedds.xml
+        export CYCLONEDDS_URI=file://$HOME/rmw_logs/Config/cyclonedds.xml
         # Cambiamos el dominio para evitar conflictos
         export ROS_DOMAIN_ID=189
         echo $ROS_DOMAIN_ID
+        sleep 2
     fi
 
     if [ "$RMW" = "rmw_zenoh_cpp" ]; then
@@ -42,9 +43,9 @@ do
         echo $ROS_DOMAIN_ID
     	sleep 2
         echo "🔧 Cargando archivo de configuración para Zenoh..."
-        export ZENOH_ROUTER_CONFIG_URI=$HOME/Desktop/router_config.json5
+        export ZENOH_ROUTER_CONFIG_URI=$HOME/rmw_logs/Config/router_config.json5
         cd ~/ros2_ws
-	source install/setup.zsh
+	    source install/setup.zsh
         ros2 run rmw_zenoh_cpp rmw_zenohd &
         ZENOH_PID=$!
         sleep 5
@@ -52,7 +53,7 @@ do
 
     if [ "$RMW" = "zenoh-bridge" ]; then
         echo "🔧 Cargando archivo de configuración para Cyclone DDS..."
-        export CYCLONEDDS_URI=file://$HOME/Desktop/cyclonedds.xml
+        export CYCLONEDDS_URI=file://$HOME/rmw_logs/Config/cyclonedds.xml
         echo $CYCLONEDDS_URI
         export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
         # Cambiamos el dominio para evitar conflictos
@@ -62,7 +63,7 @@ do
         cd ~/ros2_ws
         source install/setup.zsh
         echo "🔧 Arrancando bridge Zenoh sobre rmw_cyclonedds_cpp..."
-        zenoh-bridge-ros2dds &
+        zenoh-bridge-ros2dds > /dev/null 2>&1 &
         ZENOH_BRIDGE_PID=$!
         sleep 3
     fi
@@ -128,7 +129,7 @@ do
     echo "✅ livox/lidar cerrado"
 
 
-    pkill -f point_cloud_republisher
+    pkill -f point_cloud_transport
     sleep 1
     while pgrep -f point_cloud_republisher > /dev/null; do
         echo "⏳ Esperando que republisher termine..."
@@ -137,7 +138,7 @@ do
     echo "✅ republisher cerrado"
 
     if [ "$RMW" = "rmw_zenoh_cpp" ]; then
-        pkill -f rmw_zenohd
+        pkill -f zenoh
         sleep 1
         while pgrep -f rmw_zenohd > /dev/null; do
             echo "⏳ Esperando que router zenoh termine..."
@@ -148,10 +149,10 @@ do
 
     if [ "$RMW" = "zenoh-bridge" ]; then
         sleep 2
-        pkill -f /zenoh_bridge_ros2dds
+        pkill -f zenoh
         # kill $ZENOH_PID
         sleep 1
-        while pgrep -f /zenoh_bridge_ros2dds > /dev/null; do
+        while pgrep -f zenoh_bridge_ros2dds > /dev/null; do
             echo "⏳ Esperando que zenoh-bridge termine..."
             sleep 1
         done

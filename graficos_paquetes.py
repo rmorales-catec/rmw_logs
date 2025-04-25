@@ -11,9 +11,11 @@ pcap_files = [
     'rmw_fastrtps_cpp1.pcap',
     'rmw_cyclonedds_cpp1.pcap',
     'rmw_zenoh_cpp1.pcap',
+    'zenoh-bridge1.pcap',
     'rmw_fastrtps_cpp2.pcap',
     'rmw_cyclonedds_cpp2.pcap',
-    'rmw_zenoh_cpp2.pcap'
+    'rmw_zenoh_cpp2.pcap',
+    'zenoh-bridge2.pcap'
 ]
 
 # Métricas a recolectar

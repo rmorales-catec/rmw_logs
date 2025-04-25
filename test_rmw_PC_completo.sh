@@ -86,7 +86,7 @@ for RMW in "${RMW_LIST[@]}"; do
     
     if [ "$RMW" = "rmw_cyclonedds_cpp" ]; then
         echo "🔧 Cargando archivo de configuración para Cyclone DDS..."
-        export CYCLONEDDS_URI=file://$HOME/Desktop/cyclonedds.xml
+        export CYCLONEDDS_URI=file://$HOME/rmw_logs/Config/cyclonedds.xml
         echo $CYCLONEDDS_URI
         # Cambiamos el dominio para evitar conflictos
         export ROS_DOMAIN_ID=189
@@ -113,7 +113,7 @@ for RMW in "${RMW_LIST[@]}"; do
 
     if [ "$RMW" = "zenoh-bridge" ]; then
         echo "🔧 Cargando archivo de configuración para Cyclone DDS..."
-        export CYCLONEDDS_URI=file://$HOME/Desktop/cyclonedds.xml
+        export CYCLONEDDS_URI=file://$HOME/rmw_logs/Config/cyclonedds.xml
         echo $CYCLONEDDS_URI
         export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
         # Cambiamos el dominio para evitar conflictos
@@ -123,9 +123,9 @@ for RMW in "${RMW_LIST[@]}"; do
         cd ~/ros2_ws
         source install/setup.zsh
         echo "🔧 Arrancando bridge Zenoh sobre rmw_cyclonedds_cpp..."
-        ros2 run zenoh_bridge_ros2dds zenoh_bridge_ros2dds &
+        ros2 run zenoh_bridge_ros2dds zenoh_bridge_ros2dds > /dev/null 2>&1 &
         ZENOH_BRIDGE_PID=$!
-        sleep 3
+        sleep 5
     fi
 
     # Parar el daemon para evitar caché anterior
@@ -316,7 +316,7 @@ for RMW in "${RMW_LIST[@]}"; do
     kill $RVIZ_PID
     echo "✅ RViz cerrado"
 
-    pkill -f point_cloud_republisher
+    pkill -f point_cloud_transport
     sleep 1
     while pgrep -f point_cloud_republisher > /dev/null; do
         echo "⏳ Esperando que republisher termine..."
@@ -327,7 +327,7 @@ for RMW in "${RMW_LIST[@]}"; do
 
     if [ "$RMW" = "rmw_zenoh_cpp" ]; then
         sleep 2
-        pkill -f rmw_zenohd
+        pkill -f zenoh
         # kill $ZENOH_PID
         sleep 1
         while pgrep -f rmw_zenohd > /dev/null; do
