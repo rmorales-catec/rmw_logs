@@ -1,7 +1,7 @@
 #!/bin/zsh
 
 # Lista de RMWs a probar
-RMW_LIST=("rmw_zenoh_cpp" "rmw_fastrtps_cpp" "rmw_cyclonedds_cpp")
+RMW_LIST=("rmw_cyclonedds_cpp" "rmw_fastrtps_cpp" "rmw_zenoh_cpp")
 DURATION=20  # segundos que se escucha
 LOG_DIR="$HOME/rmw_logs/Resultados"
 
@@ -55,14 +55,42 @@ wait_for_topics2() {
     return 1
 }
 
+mover_pcaps() {
+    echo "📦 Moviendo archivos .pcap desde /tmp a $LOG_DIR"
+
+    local files=(/tmp/*.pcap)
+
+    if [[ ${#files[@]} -eq 0 ]]; then
+        echo "⚠️ No se encontraron archivos .pcap en /tmp"
+        return
+    fi
+
+    for file in "${files[@]}"; do
+        echo "➡️  Moviendo $(basename "$file")"
+        sudo mv "$file" "$LOG_DIR/"
+    done
+
+    # Aseguramos que el usuario tenga permisos sobre los archivos
+    sudo chown rmorales:rmorales "$LOG_DIR"/*.pcap
+
+    echo "✅ Todos los archivos .pcap fueron movidos"
+}
+
+
 for RMW in "${RMW_LIST[@]}"; do
     echo "\n🔧 Probando RMW: $RMW"
     export RMW_IMPLEMENTATION=$RMW
+    # Cambiamos el dominio para evitar conflictos
+    export ROS_DOMAIN_ID=190
+    echo $ROS_DOMAIN_ID
     
     if [ "$RMW" = "rmw_cyclonedds_cpp" ]; then
         echo "🔧 Cargando archivo de configuración para Cyclone DDS..."
         export CYCLONEDDS_URI=file://$HOME/Desktop/cyclonedds.xml
         echo $CYCLONEDDS_URI
+        # Cambiamos el dominio para evitar conflictos
+        export ROS_DOMAIN_ID=189
+        echo $ROS_DOMAIN_ID
     fi
 
   if [ "$RMW" = "rmw_zenoh_cpp" ]; then
@@ -72,9 +100,14 @@ for RMW in "${RMW_LIST[@]}"; do
             sudo fuser -k 7447/tcp
             sleep 2
         fi
+        # Cambiamos el dominio para evitar conflictos
+        export ROS_DOMAIN_ID=191
+        echo $ROS_DOMAIN_ID
+
         
         echo "🔧 Cargando archivo de configuración para Zenoh..."
         cd ~/ros2_ws
+        source install/setup.zsh
         ros2 run rmw_zenoh_cpp rmw_zenohd &
         ZENOH_PID=$!
         sleep 3
@@ -82,7 +115,7 @@ for RMW in "${RMW_LIST[@]}"; do
 
     # Parar el daemon para evitar caché anterior
     ros2 daemon stop
-    sleep 1
+    sleep 2
 
     # Esperar a que ambos topics estén disponibles
     if ! wait_for_topics; then
@@ -96,6 +129,7 @@ for RMW in "${RMW_LIST[@]}"; do
         echo "🚀 Lanzando RViz con configuración predefinida..."
         rviz2 -d "$RVIZ_CONFIG_PATH" &
         RVIZ_PID=$!
+        sleep 1
     else
         echo "⚠️ No se encontró el archivo de configuración de RViz en: $RVIZ_CONFIG_PATH"
     fi
@@ -103,27 +137,46 @@ for RMW in "${RMW_LIST[@]}"; do
 
     # Lanzamos subscriber de imágenes
     echo "🚀 Lanzando nodo de imágenes..."
+    cd ~/ros2_ws
+    source install/setup.zsh
+    sleep 1
     ros2 run prueba_qos image_subscriber_QoS_compressed &
     SUB_PID=$!
     sleep 1
 
-    # --- 🔴 INICIO DE CAPTURA DE PAQUETES ---
     (
-    sleep 3
-    echo "📡 Iniciando captura de paquetes con tcpdump..."
-    TCPDUMP_TMP="/tmp/${RMW}1.pcap"
-    sudo tcpdump -i enxc84d44228958 -w "$TCPDUMP_TMP" port 7400 or port 7410 or udp > /dev/null 2>&1 &
-    TCPDUMP_PID=$!
-    # Aseguramos que tcpdump arranque correctamente
-    sleep 2
-    ) &
-    # ----------------------------------------
+        sleep 7
+        echo "📡 Iniciando captura de paquetes con tcpdump..."
+        TCPDUMP_TMP="/tmp/${RMW}1.pcap"
+        TCPDUMP_PID_FILE="/tmp/tcpdump.pid"  # Archivo para guardar el PID
 
-    # Programamos detenerlo después del tiempo de duración
+        # Ejecutar tcpdump en segundo plano y guardar su PID
+        sudo tcpdump -i enxc84d44228958 -w "$TCPDUMP_TMP" &
+        TCPDUMP_PID=$!
+        echo "$TCPDUMP_PID" > "$TCPDUMP_PID_FILE"
+        echo "Captura guardada en: $TCPDUMP_TMP (PID: $TCPDUMP_PID)"
+        sleep 2
+    ) &
+
+
     (
-        sleep 10
+        sleep 13
         echo "🛑 Deteniendo captura de paquetes (auto)"
-        sudo kill -SIGINT $TCPDUMP_PID 2>/dev/null
+        # Leer el PID desde el archivo
+        TCPDUMP_PID_FILE="/tmp/tcpdump.pid"
+        if [ -f "$TCPDUMP_PID_FILE" ]; then
+            TCPDUMP_PID=$(cat "$TCPDUMP_PID_FILE")
+            if ps -p "$TCPDUMP_PID" > /dev/null; then
+                sudo kill -SIGINT "$TCPDUMP_PID"
+                echo "✅ Captura de paquetes cerrada (PID: $TCPDUMP_PID)"
+            else
+                echo "⚠️ tcpdump ya no está corriendo"
+            fi
+            rm "$TCPDUMP_PID_FILE"
+            echo "PID eliminado"
+        else
+            echo "❌ Archivo PID no encontrado"
+        fi
     ) &
 
 
@@ -146,12 +199,6 @@ for RMW in "${RMW_LIST[@]}"; do
 
     # Cerramos RViz para cargar la otra configuración
     kill $RVIZ_PID
-
-    # Movemos los archivos pcap a la carpeta de resultados
-    sudo mv "$TCPDUMP_TMP" "$LOG_DIR/"
-    cd ~/rmw_logs/Resultados
-    sudo chown rmorales:rmorales *.pcap
-    echo "Captura de paquetes guardada en: $LOG_DIR/${RMW}1.pcap"
 
     sleep 3
     # Lanzar nodos de republisher
@@ -182,24 +229,39 @@ for RMW in "${RMW_LIST[@]}"; do
     fi
     sleep 1
 
-
-     # --- 🔴 INICIO DE CAPTURA DE PAQUETES ---
     (
-    sleep 3
-    echo "📡 Iniciando captura de paquetes con tcpdump..."
-    TCPDUMP_TMP="/tmp/${RMW}2.pcap"
-    sudo tcpdump -i enxc84d44228958 -w "$TCPDUMP_TMP" port 7400 or port 7410 or udp > /dev/null 2>&1 &
-    TCPDUMP_PID=$!
-    # Aseguramos que tcpdump arranque correctamente
-    sleep 2
-    ) &
-    # ----------------------------------------
+        sleep 5
+        echo "📡 Iniciando captura de paquetes con tcpdump..."
+        TCPDUMP_TMP="/tmp/${RMW}2.pcap"
+        TCPDUMP_PID_FILE="/tmp/tcpdump.pid"  # Archivo para guardar el PID
 
-    # Programamos detenerlo después del tiempo de duración
+        # Ejecutar tcpdump en segundo plano y guardar su PID
+        sudo tcpdump -i enxc84d44228958 -w "$TCPDUMP_TMP" &
+        TCPDUMP_PID=$!
+        echo "$TCPDUMP_PID" > "$TCPDUMP_PID_FILE"
+        echo "Captura guardada en: $TCPDUMP_TMP (PID: $TCPDUMP_PID)"
+        sleep 2
+    ) &
+
+
     (
         sleep 10
         echo "🛑 Deteniendo captura de paquetes (auto)"
-        sudo kill -SIGINT $TCPDUMP_PID 2>/dev/null
+        # Leer el PID desde el archivo
+        TCPDUMP_PID_FILE="/tmp/tcpdump.pid"
+        if [ -f "$TCPDUMP_PID_FILE" ]; then
+            TCPDUMP_PID=$(cat "$TCPDUMP_PID_FILE")
+            if ps -p "$TCPDUMP_PID" > /dev/null; then
+                sudo kill -SIGINT "$TCPDUMP_PID"
+                echo "✅ Captura de paquetes cerrada (PID: $TCPDUMP_PID)"
+            else
+                echo "⚠️ tcpdump ya no está corriendo"
+            fi
+            rm "$TCPDUMP_PID_FILE"
+            echo "PID eliminado"
+        else
+            echo "❌ Archivo PID no encontrado"
+        fi
     ) &
 
 
@@ -220,11 +282,6 @@ for RMW in "${RMW_LIST[@]}"; do
     wait $DELAY_IMAGE_PID
     wait $HZ_LIDAR_PID
     wait $DELAY_LIDAR_PID
-
-    # Movemos los archivos pcap a la carpeta de resultados
-    sudo mv "$TCPDUMP_TMP" "$LOG_DIR/"
-    cd ~/rmw_logs/Resultados
-    sudo chown rmorales:rmorales *.pcap
 
     echo "🛑 Deteniendo nodos..."
     # Detenemos el subscriber de imágenes
@@ -252,6 +309,7 @@ for RMW in "${RMW_LIST[@]}"; do
 
 
     if [ "$RMW" = "rmw_zenoh_cpp" ]; then
+        sleep 2
         pkill -f rmw_zenohd
         # kill $ZENOH_PID
         sleep 1
@@ -263,10 +321,13 @@ for RMW in "${RMW_LIST[@]}"; do
     fi
 
     echo "✅ Medición para $RMW completada"
-    sleep 5
+    sleep 7
 done
 
 echo "\n📁 Pruebas completas. Resultados guardados en: $LOG_DIR"
+
+# Mover los archivos pcap a la carpeta de resultados
+mover_pcaps
 
 # Graficamos los resultados
 echo "📊 Graficando resultados..."

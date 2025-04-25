@@ -312,6 +312,7 @@ for filename in RMW_FILES:
         avg_sizes.append(avg)
         packet_counts.append(len(sizes))
         total_bytes.append(sum(sizes))  # Total en bytes
+        print(f"✅ {filename}")
     else:
         print(f"⚠️ No se extrajeron datos de {filename}")
 

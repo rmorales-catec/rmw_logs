@@ -1,12 +1,9 @@
 #!/bin/zsh
 
 # 🚀 Lista de RMWs a probar
-RMW_LIST=("rmw_zenoh_cpp" "rmw_fastrtps_cpp" "rmw_cyclonedds_cpp")
+RMW_LIST=("rmw_cyclonedds_cpp" "rmw_fastrtps_cpp" "rmw_zenoh_cpp")
 
-# 🧪 Configuración del test
-# TOPIC_NAME="/image_compressed"
 DURATION=10  # segundos que se escucha
-# LAUNCH_CMD="ros2 launch my_package my_test.launch.py"
 LOG_DIR="rmw_logs"
 
 cd ~/ros2_ws
@@ -21,10 +18,16 @@ do
     # Setear el RMW
     export RMW_IMPLEMENTATION=$RMW
     echo $RMW_IMPLEMENTATION
+    # Cambiamos el dominio para evitar conflictos
+    export ROS_DOMAIN_ID=190
+    echo $ROS_DOMAIN_ID
 
     if [ "$RMW" = "rmw_cyclonedds_cpp" ]; then
         echo "🔧 Cargando archivo de configuración para Cyclone DDS..."
         export CYCLONEDDS_URI=file://$HOME/Desktop/cyclonedds.xml
+        # Cambiamos el dominio para evitar conflictos
+        export ROS_DOMAIN_ID=189
+        echo $ROS_DOMAIN_ID
     fi
 
     if [ "$RMW" = "rmw_zenoh_cpp" ]; then
@@ -34,14 +37,17 @@ do
             sudo fuser -k 7447/tcp
             sleep 2
         fi
-        
-    	sleep 3
+        # Cambiamos el dominio para evitar conflictos
+        export ROS_DOMAIN_ID=191
+        echo $ROS_DOMAIN_ID
+
+    	sleep 2
         echo "🔧 Cargando archivo de configuración para Zenoh..."
         export ZENOH_ROUTER_CONFIG_URI=$HOME/Desktop/router_config.json5
         cd ~/ros2_ws
         ros2 run rmw_zenoh_cpp rmw_zenohd &
         ZENOH_PID=$!
-        sleep 4
+        sleep 3
     fi
 
     # Limpiar estado anterior
@@ -81,7 +87,7 @@ do
     echo "Nodo de republisher ejecutandose"
 
 
-    sleep 30
+    sleep 28
 
 
     # Finalizar nodos
