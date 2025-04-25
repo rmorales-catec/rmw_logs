@@ -4,7 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # Directorio con capturas pcap
-LOG_DIR = os.path.expanduser('~/rmw_logs/Resultados_pruebas/Resultados/Resultados25-04_2')
+LOG_DIR = os.path.expanduser('~/rmw_logs/Resultados')
 
 # Lista de nombres de archivos pcap
 pcap_files = [

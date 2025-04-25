@@ -2,8 +2,9 @@ import matplotlib.pyplot as plt
 import os
 import re
 
-log_dir = os.path.expanduser('~/rmw_logs/Resultados_pruebas/Resultados/Resultados25-04_2')
-rmws = ['rmw_fastrtps_cpp', 'rmw_cyclonedds_cpp', 'rmw_zenoh_cpp']
+# log_dir = os.path.expanduser('~/rmw_logs/Resultados_pruebas/Resultados/Resultados25-04_2')
+log_dir = os.path.expanduser('~/rmw_logs/Resultados')
+rmws = ['rmw_fastrtps_cpp', 'rmw_cyclonedds_cpp', 'rmw_zenoh_cpp', 'zenoh-bridge']
 
 def parse_file(filepath, mode='hz'):
     values = []

@@ -270,9 +270,11 @@ RMW_FILES = [
     "rmw_fastrtps_cpp1.pcap",
     "rmw_cyclonedds_cpp1.pcap",
     "rmw_zenoh_cpp1.pcap",
+    "zenoh-bridge1.pcap",
     "rmw_fastrtps_cpp2.pcap",
     "rmw_cyclonedds_cpp2.pcap",
-    "rmw_zenoh_cpp2.pcap"
+    "rmw_zenoh_cpp2.pcap",
+    "zenoh-bridge2.pcap"
 ]
 
 LOG_DIR = os.path.expanduser("~/rmw_logs/Resultados")
@@ -285,7 +287,7 @@ total_bytes = []
 
 def extract_packet_metrics(pcap_path):
     try:
-        cap = pyshark.FileCapture(pcap_path, display_filter="udp", only_summaries=False)
+        cap = pyshark.FileCapture(pcap_path, display_filter="udp or tcp", only_summaries=False)
         sizes = []
         for pkt in cap:
             try:
