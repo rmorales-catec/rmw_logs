@@ -1,0 +1,39 @@
+Subscribed to [/image_compressed]
+1.06 MB/s from 17 messages
+	Message size mean: 0.06 MB min: 0.06 MB max: 0.06 MB
+986.77 KB/s from 30 messages
+	Message size mean: 57.27 KB min: 57.13 KB max: 57.44 KB
+945.22 KB/s from 30 messages
+	Message size mean: 57.26 KB min: 57.11 KB max: 57.48 KB
+927.86 KB/s from 30 messages
+	Message size mean: 57.31 KB min: 57.08 KB max: 57.53 KB
+965.79 KB/s from 30 messages
+	Message size mean: 57.32 KB min: 57.06 KB max: 57.53 KB
+988.33 KB/s from 30 messages
+	Message size mean: 57.30 KB min: 57.17 KB max: 57.49 KB
+959.26 KB/s from 30 messages
+	Message size mean: 57.28 KB min: 57.09 KB max: 57.50 KB
+932.56 KB/s from 30 messages
+	Message size mean: 57.30 KB min: 57.09 KB max: 57.50 KB
+993.88 KB/s from 30 messages
+	Message size mean: 57.30 KB min: 57.12 KB max: 57.53 KB
+987.18 KB/s from 30 messages
+	Message size mean: 57.29 KB min: 57.12 KB max: 57.53 KB
+936.84 KB/s from 30 messages
+	Message size mean: 57.28 KB min: 57.12 KB max: 57.42 KB
+971.80 KB/s from 30 messages
+	Message size mean: 57.26 KB min: 57.11 KB max: 57.52 KB
+973.80 KB/s from 30 messages
+	Message size mean: 57.27 KB min: 57.10 KB max: 57.52 KB
+993.69 KB/s from 30 messages
+	Message size mean: 57.27 KB min: 57.05 KB max: 57.44 KB
+974.28 KB/s from 30 messages
+	Message size mean: 57.27 KB min: 57.05 KB max: 57.44 KB
+1.02 MB/s from 30 messages
+	Message size mean: 0.06 MB min: 0.06 MB max: 0.06 MB
+1.03 MB/s from 30 messages
+	Message size mean: 0.06 MB min: 0.06 MB max: 0.06 MB
+1.01 MB/s from 30 messages
+	Message size mean: 0.06 MB min: 0.06 MB max: 0.06 MB
+970.12 KB/s from 30 messages
+	Message size mean: 57.23 KB min: 57.04 KB max: 57.38 KB

@@ -202,17 +202,23 @@ for RMW in "${RMW_LIST[@]}"; do
     HZ_IMAGE_PID=$!
     timeout ${DURATION}s ros2 topic delay /image_compressed -w 30 | tee "$LOG_DIR/${RMW}_image_delay.txt" &
     DELAY_IMAGE_PID=$!
+    timeout ${DURATION}s ros2 topic bw /image_compressed -w 30 | tee "$LOG_DIR/${RMW}_image_bw.txt" &
+    BW_IMAGE_PID=$!
     echo "📏 Midiendo frecuencia y delay del lidar..."
     timeout ${DURATION}s ros2 topic hz /livox/lidar -w 30 | tee "$LOG_DIR/${RMW}_lidar_hz.txt" &
     HZ_LIDAR_PID=$!
     timeout ${DURATION}s ros2 topic delay /livox/lidar -w 30 | tee "$LOG_DIR/${RMW}_lidar_delay.txt" &
     DELAY_LIDAR_PID=$!
+    timeout ${DURATION}s ros2 topic bw /livox/lidar -w 30 | tee "$LOG_DIR/${RMW}_lidar_bw.txt" &
+    BW_LIDAR_PID=$!
 
     # Esperar a que se complete el tiempo
     wait $HZ_IMAGE_PID
     wait $DELAY_IMAGE_PID
+    wait $BW_IMAGE_PID
     wait $HZ_LIDAR_PID
     wait $DELAY_LIDAR_PID
+    wait $BW_LIDAR_PID
 
     # Cerramos RViz para cargar la otra configuración
     kill $RVIZ_PID
@@ -288,17 +294,23 @@ for RMW in "${RMW_LIST[@]}"; do
     HZ_IMAGE_PID=$!
     timeout ${DURATION}s ros2 topic delay /image_compressed -w 30 | tee "$LOG_DIR/${RMW}_image_delay2.txt" &
     DELAY_IMAGE_PID=$!
+    timeout ${DURATION}s ros2 topic bw /image_compressed -w 30 | tee "$LOG_DIR/${RMW}_image_bw2.txt" &
+    BW_IMAGE_PID=$!
     echo "📏 Midiendo frecuencia y delay del lidar comprimido..."
     timeout ${DURATION}s ros2 topic hz /livox/lidar/compressed -w 30 | tee "$LOG_DIR/${RMW}_lidar_compressed_hz.txt" &
     HZ_LIDAR_PID=$!
     timeout ${DURATION}s ros2 topic delay /livox/lidar/compressed -w 30 | tee "$LOG_DIR/${RMW}_lidar_compressed_delay.txt" &
     DELAY_LIDAR_PID=$!
+    timeout ${DURATION}s ros2 topic bw /livox/lidar -w 30 | tee "$LOG_DIR/${RMW}_lidar_compressed_bw.txt" &
+    BW_LIDAR_PID=$!
 
     # Esperar a que se complete el tiempo
     wait $HZ_IMAGE_PID
     wait $DELAY_IMAGE_PID
+    wait $BW_IMAGE_PID
     wait $HZ_LIDAR_PID
     wait $DELAY_LIDAR_PID
+    wait $BW_LIDAR_PID
 
     echo "🛑 Deteniendo nodos..."
     # Detenemos el subscriber de imágenes

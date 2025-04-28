@@ -1,0 +1,39 @@
+Subscribed to [/livox/lidar]
+2.83 MB/s from 4 messages
+	Message size mean: 0.52 MB min: 0.51 MB max: 0.53 MB
+2.70 MB/s from 9 messages
+	Message size mean: 0.52 MB min: 0.51 MB max: 0.53 MB
+2.67 MB/s from 14 messages
+	Message size mean: 0.52 MB min: 0.51 MB max: 0.53 MB
+2.65 MB/s from 19 messages
+	Message size mean: 0.52 MB min: 0.51 MB max: 0.53 MB
+2.64 MB/s from 24 messages
+	Message size mean: 0.52 MB min: 0.51 MB max: 0.53 MB
+2.63 MB/s from 29 messages
+	Message size mean: 0.52 MB min: 0.50 MB max: 0.53 MB
+2.64 MB/s from 30 messages
+	Message size mean: 0.52 MB min: 0.50 MB max: 0.54 MB
+2.64 MB/s from 30 messages
+	Message size mean: 0.52 MB min: 0.50 MB max: 0.54 MB
+2.63 MB/s from 30 messages
+	Message size mean: 0.52 MB min: 0.50 MB max: 0.54 MB
+2.64 MB/s from 30 messages
+	Message size mean: 0.52 MB min: 0.50 MB max: 0.54 MB
+2.62 MB/s from 30 messages
+	Message size mean: 0.52 MB min: 0.50 MB max: 0.54 MB
+2.63 MB/s from 30 messages
+	Message size mean: 0.52 MB min: 0.50 MB max: 0.54 MB
+2.63 MB/s from 30 messages
+	Message size mean: 0.52 MB min: 0.50 MB max: 0.53 MB
+2.62 MB/s from 30 messages
+	Message size mean: 0.52 MB min: 0.47 MB max: 0.55 MB
+2.60 MB/s from 30 messages
+	Message size mean: 0.52 MB min: 0.47 MB max: 0.55 MB
+2.60 MB/s from 30 messages
+	Message size mean: 0.52 MB min: 0.47 MB max: 0.55 MB
+2.62 MB/s from 30 messages
+	Message size mean: 0.52 MB min: 0.47 MB max: 0.55 MB
+2.64 MB/s from 30 messages
+	Message size mean: 0.52 MB min: 0.47 MB max: 0.55 MB
+2.64 MB/s from 30 messages
+	Message size mean: 0.52 MB min: 0.47 MB max: 0.55 MB

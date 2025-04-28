@@ -24,7 +24,7 @@ do
 
     if [ "$RMW" = "rmw_cyclonedds_cpp" ]; then
         echo "🔧 Cargando archivo de configuración para Cyclone DDS..."
-        export CYCLONEDDS_URI=file://$HOME/rmw_logs/Config/cyclonedds.xml
+        export CYCLONEDDS_URI=file://$HOME/rmw_logs/Config/cyclonedds_raspy.xml
         # Cambiamos el dominio para evitar conflictos
         export ROS_DOMAIN_ID=189
         echo $ROS_DOMAIN_ID
@@ -53,7 +53,7 @@ do
 
     if [ "$RMW" = "zenoh-bridge" ]; then
         echo "🔧 Cargando archivo de configuración para Cyclone DDS..."
-        export CYCLONEDDS_URI=file://$HOME/rmw_logs/Config/cyclonedds.xml
+        export CYCLONEDDS_URI=file://$HOME/rmw_logs/Config/cyclonedds_raspy.xml
         echo $CYCLONEDDS_URI
         export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
         # Cambiamos el dominio para evitar conflictos
