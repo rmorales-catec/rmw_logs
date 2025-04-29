@@ -17,6 +17,7 @@
     </Tracing>
     <Discovery>
       <ParticipantIndex>auto</ParticipantIndex>
+      <MaxAutoParticipantIndex>100</MaxAutoParticipantIndex>
       <Peers>
         <Peer Address="10.1.0.190"/> <!--IP de Raspberry -->
         <Peer Address="10.1.0.191"/> <!--IP de PC -->

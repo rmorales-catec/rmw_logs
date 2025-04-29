@@ -1,7 +1,7 @@
 #!/bin/zsh
 
 # Lista de RMWs a probar
-RMW_LIST=("rmw_cyclonedds_cpp" "rmw_fastrtps_cpp" "rmw_zenoh_cpp" "zenoh-bridge")
+RMW_LIST=("rmw_zenoh_cpp" "zenoh-bridge" "rmw_cyclonedds_cpp" "rmw_fastrtps_cpp")
 DURATION=20  # segundos que se escucha
 LOG_DIR="$HOME/rmw_logs/Resultados"
 
@@ -81,7 +81,7 @@ for RMW in "${RMW_LIST[@]}"; do
     echo "\n🔧 Probando RMW: $RMW"
     export RMW_IMPLEMENTATION=$RMW
     # Cambiamos el dominio para evitar conflictos
-    export ROS_DOMAIN_ID=190
+    export ROS_DOMAIN_ID=80
     echo $ROS_DOMAIN_ID
     
     if [ "$RMW" = "rmw_cyclonedds_cpp" ]; then
@@ -89,7 +89,7 @@ for RMW in "${RMW_LIST[@]}"; do
         export CYCLONEDDS_URI=file://$HOME/rmw_logs/Config/cyclonedds.xml
         echo $CYCLONEDDS_URI
         # Cambiamos el dominio para evitar conflictos
-        export ROS_DOMAIN_ID=189
+        export ROS_DOMAIN_ID=81
         echo $ROS_DOMAIN_ID
     fi
 
@@ -101,9 +101,10 @@ for RMW in "${RMW_LIST[@]}"; do
             sleep 2
         fi
         # Cambiamos el dominio para evitar conflictos
-        export ROS_DOMAIN_ID=191
+        export ROS_DOMAIN_ID=82
         echo $ROS_DOMAIN_ID        
         echo "🔧 Cargando archivo de configuración para Zenoh..."
+        export ZENOH_ROUTER_CONFIG_URI=$HOME/rmw_logs/Config/router_config.json5
         cd ~/ros2_ws
         source install/setup.zsh
         ros2 run rmw_zenoh_cpp rmw_zenohd &
@@ -117,7 +118,7 @@ for RMW in "${RMW_LIST[@]}"; do
         echo $CYCLONEDDS_URI
         export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
         # Cambiamos el dominio para evitar conflictos
-        export ROS_DOMAIN_ID=192
+        export ROS_DOMAIN_ID=83
         echo $ROS_DOMAIN_ID
 
         cd ~/ros2_ws
@@ -125,7 +126,7 @@ for RMW in "${RMW_LIST[@]}"; do
         echo "🔧 Arrancando bridge Zenoh sobre rmw_cyclonedds_cpp..."
         ros2 run zenoh_bridge_ros2dds zenoh_bridge_ros2dds > /dev/null 2>&1 &
         ZENOH_BRIDGE_PID=$!
-        sleep 5
+        sleep 2
     fi
 
     # Parar el daemon para evitar caché anterior
@@ -138,8 +139,17 @@ for RMW in "${RMW_LIST[@]}"; do
         continue
     fi
 
-    echo "Lanzamos RViz con la configuración de Lidar..."
+
+    # Lanzamos subscriber de imágenes
+    echo "🚀 Lanzando nodo de imágenes..."
+    cd ~/ros2_ws
+    source install/setup.zsh
+    sleep 1
+    ros2 run prueba_qos image_subscriber_QoS_compressed &
+    SUB_PID=$!
     sleep 2
+
+    echo "Lanzamos RViz con la configuración de Lidar..."
     RVIZ_CONFIG_PATH="$HOME/rmw_logs/Config/livox-lidar.rviz"
     # Verifica que el archivo de configuración exista
     if [[ -f "$RVIZ_CONFIG_PATH" ]]; then
@@ -150,16 +160,8 @@ for RMW in "${RMW_LIST[@]}"; do
     else
         echo "⚠️ No se encontró el archivo de configuración de RViz en: $RVIZ_CONFIG_PATH"
     fi
-    sleep 1
+    sleep 2
 
-    # Lanzamos subscriber de imágenes
-    echo "🚀 Lanzando nodo de imágenes..."
-    cd ~/ros2_ws
-    source install/setup.zsh
-    sleep 1
-    ros2 run prueba_qos image_subscriber_QoS_compressed &
-    SUB_PID=$!
-    sleep 1
 
     (
         sleep 7
@@ -196,29 +198,35 @@ for RMW in "${RMW_LIST[@]}"; do
         fi
     ) &
 
-
+    sleep 4
     echo "📏 Midiendo frecuencia y delay de la imagen..."
     timeout ${DURATION}s ros2 topic hz /image_compressed -w 30 | tee "$LOG_DIR/${RMW}_image_hz.txt" &
     HZ_IMAGE_PID=$!
-    timeout ${DURATION}s ros2 topic delay /image_compressed -w 30 | tee "$LOG_DIR/${RMW}_image_delay.txt" &
-    DELAY_IMAGE_PID=$!
-    timeout ${DURATION}s ros2 topic bw /image_compressed -w 30 | tee "$LOG_DIR/${RMW}_image_bw.txt" &
-    BW_IMAGE_PID=$!
     echo "📏 Midiendo frecuencia y delay del lidar..."
     timeout ${DURATION}s ros2 topic hz /livox/lidar -w 30 | tee "$LOG_DIR/${RMW}_lidar_hz.txt" &
     HZ_LIDAR_PID=$!
+
+    timeout ${DURATION}s ros2 topic delay /image_compressed -w 30 | tee "$LOG_DIR/${RMW}_image_delay.txt" &
+    DELAY_IMAGE_PID=$!
     timeout ${DURATION}s ros2 topic delay /livox/lidar -w 30 | tee "$LOG_DIR/${RMW}_lidar_delay.txt" &
     DELAY_LIDAR_PID=$!
-    timeout ${DURATION}s ros2 topic bw /livox/lidar -w 30 | tee "$LOG_DIR/${RMW}_lidar_bw.txt" &
+
+    timeout ${DURATION}s ros2 topic bw /image_compressed | tee "$LOG_DIR/${RMW}_image_bw.txt" &
+    BW_IMAGE_PID=$!
+    timeout ${DURATION}s ros2 topic bw /livox/lidar | tee "$LOG_DIR/${RMW}_lidar_bw.txt" &
     BW_LIDAR_PID=$!
 
     # Esperar a que se complete el tiempo
     wait $HZ_IMAGE_PID
-    wait $DELAY_IMAGE_PID
-    wait $BW_IMAGE_PID
     wait $HZ_LIDAR_PID
+    wait $DELAY_IMAGE_PID
     wait $DELAY_LIDAR_PID
+    wait $BW_IMAGE_PID
     wait $BW_LIDAR_PID
+
+
+    # sleep 24
+
 
     # Cerramos RViz para cargar la otra configuración
     kill $RVIZ_PID
@@ -253,7 +261,7 @@ for RMW in "${RMW_LIST[@]}"; do
     sleep 1
 
     (
-        sleep 5
+        sleep 7
         echo "📡 Iniciando captura de paquetes con tcpdump..."
         TCPDUMP_TMP="/tmp/${RMW}2.pcap"
         TCPDUMP_PID_FILE="/tmp/tcpdump.pid"  # Archivo para guardar el PID
@@ -268,7 +276,7 @@ for RMW in "${RMW_LIST[@]}"; do
 
 
     (
-        sleep 10
+        sleep 17
         echo "🛑 Deteniendo captura de paquetes (auto)"
         # Leer el PID desde el archivo
         TCPDUMP_PID_FILE="/tmp/tcpdump.pid"
@@ -292,25 +300,30 @@ for RMW in "${RMW_LIST[@]}"; do
     echo "📏 Midiendo frecuencia y delay de la imagen..."
     timeout ${DURATION}s ros2 topic hz /image_compressed -w 30 | tee "$LOG_DIR/${RMW}_image_hz2.txt" &
     HZ_IMAGE_PID=$!
-    timeout ${DURATION}s ros2 topic delay /image_compressed -w 30 | tee "$LOG_DIR/${RMW}_image_delay2.txt" &
-    DELAY_IMAGE_PID=$!
-    timeout ${DURATION}s ros2 topic bw /image_compressed -w 30 | tee "$LOG_DIR/${RMW}_image_bw2.txt" &
-    BW_IMAGE_PID=$!
     echo "📏 Midiendo frecuencia y delay del lidar comprimido..."
     timeout ${DURATION}s ros2 topic hz /livox/lidar/compressed -w 30 | tee "$LOG_DIR/${RMW}_lidar_compressed_hz.txt" &
     HZ_LIDAR_PID=$!
+
+    timeout ${DURATION}s ros2 topic delay /image_compressed -w 30 | tee "$LOG_DIR/${RMW}_image_delay2.txt" &
+    DELAY_IMAGE_PID=$!
     timeout ${DURATION}s ros2 topic delay /livox/lidar/compressed -w 30 | tee "$LOG_DIR/${RMW}_lidar_compressed_delay.txt" &
     DELAY_LIDAR_PID=$!
-    timeout ${DURATION}s ros2 topic bw /livox/lidar -w 30 | tee "$LOG_DIR/${RMW}_lidar_compressed_bw.txt" &
+
+    timeout ${DURATION}s ros2 topic bw /image_compressed | tee "$LOG_DIR/${RMW}_image_bw2.txt" &
+    BW_IMAGE_PID=$!
+    timeout ${DURATION}s ros2 topic bw /livox/lidar/compressed | tee "$LOG_DIR/${RMW}_lidar_compressed_bw.txt" &
     BW_LIDAR_PID=$!
 
     # Esperar a que se complete el tiempo
     wait $HZ_IMAGE_PID
-    wait $DELAY_IMAGE_PID
-    wait $BW_IMAGE_PID
     wait $HZ_LIDAR_PID
-    wait $DELAY_LIDAR_PID
+    
+    wait $DELAY_IMAGE_PID
+    wait $DELAY_LIDAR_PID  .
+
+    wait $BW_IMAGE_PID
     wait $BW_LIDAR_PID
+
 
     echo "🛑 Deteniendo nodos..."
     # Detenemos el subscriber de imágenes

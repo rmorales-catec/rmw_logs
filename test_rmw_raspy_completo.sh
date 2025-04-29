@@ -1,7 +1,7 @@
 #!/bin/zsh
 
 # 🚀 Lista de RMWs a probar
-RMW_LIST=("rmw_cyclonedds_cpp" "rmw_fastrtps_cpp" "rmw_zenoh_cpp" "zenoh-bridge")
+RMW_LIST=("rmw_zenoh_cpp" "zenoh-bridge" "rmw_cyclonedds_cpp" "rmw_fastrtps_cpp")
 
 DURATION=10  # segundos que se escucha
 LOG_DIR="rmw_logs"
@@ -19,14 +19,14 @@ do
     export RMW_IMPLEMENTATION=$RMW
     echo $RMW_IMPLEMENTATION
     # Cambiamos el dominio para evitar conflictos
-    export ROS_DOMAIN_ID=190
+    export ROS_DOMAIN_ID=80
     echo $ROS_DOMAIN_ID
 
     if [ "$RMW" = "rmw_cyclonedds_cpp" ]; then
         echo "🔧 Cargando archivo de configuración para Cyclone DDS..."
         export CYCLONEDDS_URI=file://$HOME/rmw_logs/Config/cyclonedds_raspy.xml
         # Cambiamos el dominio para evitar conflictos
-        export ROS_DOMAIN_ID=189
+        export ROS_DOMAIN_ID=81
         echo $ROS_DOMAIN_ID
         sleep 2
     fi
@@ -39,7 +39,7 @@ do
             sleep 2
         fi
         # Cambiamos el dominio para evitar conflictos
-        export ROS_DOMAIN_ID=191
+        export ROS_DOMAIN_ID=82
         echo $ROS_DOMAIN_ID
     	sleep 2
         echo "🔧 Cargando archivo de configuración para Zenoh..."
@@ -57,7 +57,7 @@ do
         echo $CYCLONEDDS_URI
         export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
         # Cambiamos el dominio para evitar conflictos
-        export ROS_DOMAIN_ID=192
+        export ROS_DOMAIN_ID=83
         echo $ROS_DOMAIN_ID
 
         cd ~/ros2_ws
@@ -91,7 +91,7 @@ do
     sleep 5  # tiempo para que inicien
     echo "Nodo de LiDAR ejecutandose"
 
-    sleep 30
+    sleep 35
 	
 
     echo "🚀 Probamos con pointcloud comprimido"
@@ -105,7 +105,7 @@ do
     echo "Nodo de republisher ejecutandose"
 
 
-    sleep 30
+    sleep 33
 
 
     # Finalizar nodos
