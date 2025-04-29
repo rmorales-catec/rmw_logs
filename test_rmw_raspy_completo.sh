@@ -78,7 +78,7 @@ do
     echo "Nodo de imagenes"
     cd ~/ros2_ws
     source install/setup.zsh
-    ros2 run prueba_qos image_publisher_QoS_compressed &
+    ros2 run prueba_rmw image_publisher_compressed &
     IMAGE_PID=$!
     sleep 2  # tiempo para que inicien
     echo "Nodo de imagenes ejecutandose"
@@ -112,9 +112,9 @@ do
     echo "🛑 Matando nodos..."
 
     # Cerrar el subscriber (usa cámara) completamente
-    pkill -f image_publisher_QoS_compressed
+    pkill -f image_publisher_compressed
     sleep 1
-    while pgrep -f image_publisher_QoS_compressed > /dev/null; do
+    while pgrep -f image_publisher_compressed > /dev/null; do
         echo "⏳ Esperando que image_publisher termine..."
         sleep 1
     done

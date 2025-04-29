@@ -145,7 +145,7 @@ for RMW in "${RMW_LIST[@]}"; do
     cd ~/ros2_ws
     source install/setup.zsh
     sleep 1
-    ros2 run prueba_qos image_subscriber_QoS_compressed &
+    ros2 run prueba_rmw image_subscriber_compressed &
     SUB_PID=$!
     sleep 2
 
@@ -327,11 +327,11 @@ for RMW in "${RMW_LIST[@]}"; do
 
     echo "🛑 Deteniendo nodos..."
     # Detenemos el subscriber de imágenes
-    pkill -f image_subscriber_QoS_compressed
+    pkill -f image_subscriber_compressed
     sleep 1
 
     # Espera hasta que el proceso se cierre completamente
-    while pgrep -f image_subscriber_QoS_compressed > /dev/null; do
+    while pgrep -f image_subscriber_compressed > /dev/null; do
         echo "⏳ Esperando que image_subscriber termine..."
         sleep 1
     done
