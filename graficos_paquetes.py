@@ -4,7 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # Directorio con capturas pcap
-LOG_DIR = os.path.expanduser('~/rmw_logs/Resultados')  # ~/Resultados_pruebas/Resultados/25-04_1 
+LOG_DIR = os.path.expanduser('~/rmw_logs/Resultados')
 
 # Lista de nombres de archivos pcap
 pcap_files = [
@@ -33,7 +33,7 @@ def process_pcap(pcap_path):
         # Capturar tanto paquetes UDP como TCP
         cap = pyshark.FileCapture(
             pcap_path,
-            display_filter='udp or tcp',
+            display_filter='',
             keep_packets=False
         )
         sizes = []

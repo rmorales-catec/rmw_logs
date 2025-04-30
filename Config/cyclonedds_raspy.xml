@@ -9,12 +9,12 @@
       <AllowMulticast>false</AllowMulticast>
       <EnableMulticastLoopback>true</EnableMulticastLoopback>
     </General>
-    <Tracing>
+    <!-- <Tracing>
       <Verbosity>fine</Verbosity>
       <OutputFile>
         ${HOME}/Desktop/cyclone_logs/cdds.log.${CYCLONEDDS_PID}
       </OutputFile>
-    </Tracing>
+    </Tracing> -->
     <Discovery>
       <ParticipantIndex>auto</ParticipantIndex>
       <MaxAutoParticipantIndex>100</MaxAutoParticipantIndex>

@@ -95,7 +95,7 @@ def plot_metric(data, title, ylabel, filename, marker='o', linestyle='--'):
     plt.show()
 
 # --- Gráficas image ---
-plot_metric(data_image_hz, "Frecuencia - image topic", "Hz", "frecuencia_image.png")
+plot_metric(data_image_hz, "Frecuencia - image topic ", "Hz", "frecuencia_image.png")
 plot_metric(data_image_delay, "Delay - image topic", "s", "delay_image.png", marker='x', linestyle='--')
 plot_metric(data_image_bw, "Ancho de banda - image topic", "MB/s", "ancho_banda_image.png", marker='x', linestyle='--')  
 
@@ -105,9 +105,9 @@ plot_metric(data_lidar_delay, "Delay - livox/lidar topic", "s", "delay_lidar.png
 plot_metric(data_lidar_bw, "Ancho de banda - livox/lidar topic", "MB/s", "ancho_banda_lidar.png", marker='x', linestyle='--')
 
 # --- Gráficas image ---
-plot_metric(data_image_hz2, "Frecuencia - image topic", "Hz", "frecuencia_image2.png")
-plot_metric(data_image_delay2, "Delay - image topic", "s", "delay_image2.png", marker='x', linestyle='--')
-plot_metric(data_image_bw2, "Ancho de banda - image topic", "MB/s", "ancho_banda_image2.png", marker='x', linestyle='--')
+plot_metric(data_image_hz2, "Frecuencia - image topic (con /compressed)", "Hz", "frecuencia_image2.png")
+plot_metric(data_image_delay2, "Delay - image topic (con /compressed)", "s", "delay_image2.png", marker='x', linestyle='--')
+plot_metric(data_image_bw2, "Ancho de banda - image topic (con /compressed)", "MB/s", "ancho_banda_image2.png", marker='x', linestyle='--')
 
 # --- Gráficas lidar comprimido ---
 plot_metric(data_lidar_compressed_hz, "Frecuencia - livox/lidar/compressed topic", "Hz", "frecuencia_lidar_compressed.png")

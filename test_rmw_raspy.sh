@@ -1,7 +1,7 @@
 #!/bin/zsh
 
 # 🚀 Lista de RMWs a probar
-RMW_LIST=("rmw_cyclonedds_cpp" "rmw_fastrtps_cpp" "rmw_zenoh_cpp")
+RMW_LIST=("rmw_zenoh_cpp" "zenoh-bridge" "rmw_cyclonedds_cpp" "rmw_fastrtps_cpp")
 
 DURATION=10  # segundos que se escucha
 LOG_DIR="rmw_logs"
@@ -19,15 +19,16 @@ do
     export RMW_IMPLEMENTATION=$RMW
     echo $RMW_IMPLEMENTATION
     # Cambiamos el dominio para evitar conflictos
-    export ROS_DOMAIN_ID=190
+    export ROS_DOMAIN_ID=80
     echo $ROS_DOMAIN_ID
 
     if [ "$RMW" = "rmw_cyclonedds_cpp" ]; then
         echo "🔧 Cargando archivo de configuración para Cyclone DDS..."
-        export CYCLONEDDS_URI=file://$HOME/Desktop/cyclonedds.xml
+        export CYCLONEDDS_URI=file://$HOME/rmw_logs/Config/cyclonedds_raspy.xml
         # Cambiamos el dominio para evitar conflictos
-        export ROS_DOMAIN_ID=189
+        export ROS_DOMAIN_ID=81
         echo $ROS_DOMAIN_ID
+        sleep 2
     fi
 
     if [ "$RMW" = "rmw_zenoh_cpp" ]; then
@@ -38,15 +39,32 @@ do
             sleep 2
         fi
         # Cambiamos el dominio para evitar conflictos
-        export ROS_DOMAIN_ID=191
+        export ROS_DOMAIN_ID=82
         echo $ROS_DOMAIN_ID
-
     	sleep 2
         echo "🔧 Cargando archivo de configuración para Zenoh..."
-        export ZENOH_ROUTER_CONFIG_URI=$HOME/Desktop/router_config.json5
+        export ZENOH_ROUTER_CONFIG_URI=$HOME/rmw_logs/Config/router_config.json5
         cd ~/ros2_ws
+	source install/setup.zsh
         ros2 run rmw_zenoh_cpp rmw_zenohd &
         ZENOH_PID=$!
+        sleep 5
+    fi
+
+    if [ "$RMW" = "zenoh-bridge" ]; then
+        echo "🔧 Cargando archivo de configuración para Cyclone DDS..."
+        export CYCLONEDDS_URI=file://$HOME/rmw_logs/Config/cyclonedds_raspy.xml
+        echo $CYCLONEDDS_URI
+        export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
+        # Cambiamos el dominio para evitar conflictos
+        export ROS_DOMAIN_ID=83
+        echo $ROS_DOMAIN_ID
+
+        cd ~/ros2_ws
+        source install/setup.zsh
+        echo "🔧 Arrancando bridge Zenoh sobre rmw_cyclonedds_cpp..."
+        zenoh-bridge-ros2dds > /dev/null 2>&1 &
+        ZENOH_BRIDGE_PID=$!
         sleep 3
     fi
 
@@ -60,7 +78,7 @@ do
     echo "Nodo de imagenes"
     cd ~/ros2_ws
     source install/setup.zsh
-    ros2 run prueba_qos image_publisher_QoS_compressed &
+    ros2 run prueba_rmw image_publisher_compressed &
     IMAGE_PID=$!
     sleep 2  # tiempo para que inicien
     echo "Nodo de imagenes ejecutandose"
@@ -73,7 +91,7 @@ do
     sleep 5  # tiempo para que inicien
     echo "Nodo de LiDAR ejecutandose"
 
-    sleep 30
+    sleep 35
 	
 
     echo "🚀 Probamos con pointcloud comprimido"
@@ -87,16 +105,16 @@ do
     echo "Nodo de republisher ejecutandose"
 
 
-    sleep 28
+    sleep 33
 
 
     # Finalizar nodos
     echo "🛑 Matando nodos..."
 
     # Cerrar el subscriber (usa cámara) completamente
-    pkill -f image_publisher_QoS_compressed
+    pkill -f image_publisher_compressed
     sleep 1
-    while pgrep -f image_publisher_QoS_compressed > /dev/null; do
+    while pgrep -f image_publisher_compressed > /dev/null; do
         echo "⏳ Esperando que image_publisher termine..."
         sleep 1
     done
@@ -111,7 +129,7 @@ do
     echo "✅ livox/lidar cerrado"
 
 
-    pkill -f point_cloud_republisher
+    pkill -f point_cloud_transport
     sleep 1
     while pgrep -f point_cloud_republisher > /dev/null; do
         echo "⏳ Esperando que republisher termine..."
@@ -120,13 +138,25 @@ do
     echo "✅ republisher cerrado"
 
     if [ "$RMW" = "rmw_zenoh_cpp" ]; then
-        pkill -f rmw_zenohd
-        # kill $ZENOH_PID
+        pkill -f zenoh
         sleep 1
         while pgrep -f rmw_zenohd > /dev/null; do
             echo "⏳ Esperando que router zenoh termine..."
             sleep 1
         done
+        echo "✅ Nodo rmw_zenohd cerrado"
+    fi
+
+    if [ "$RMW" = "zenoh-bridge" ]; then
+        sleep 2
+        pkill -f zenoh
+        # kill $ZENOH_PID
+        sleep 1
+        while pgrep -f zenoh_bridge_ros2dds > /dev/null; do
+            echo "⏳ Esperando que zenoh-bridge termine..."
+            sleep 1
+        done
+        echo "✅ Nodo zenoh-bridge cerrado"
     fi
 
     sleep 5
