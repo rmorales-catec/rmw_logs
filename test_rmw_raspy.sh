@@ -45,7 +45,7 @@ do
         echo "🔧 Cargando archivo de configuración para Zenoh..."
         export ZENOH_ROUTER_CONFIG_URI=$HOME/rmw_logs/Config/router_config.json5
         cd ~/ros2_ws
-	source install/setup.zsh
+	    source install/setup.zsh
         ros2 run rmw_zenoh_cpp rmw_zenohd &
         ZENOH_PID=$!
         sleep 5
@@ -150,7 +150,6 @@ do
     if [ "$RMW" = "zenoh-bridge" ]; then
         sleep 2
         pkill -f zenoh
-        # kill $ZENOH_PID
         sleep 1
         while pgrep -f zenoh_bridge_ros2dds > /dev/null; do
             echo "⏳ Esperando que zenoh-bridge termine..."

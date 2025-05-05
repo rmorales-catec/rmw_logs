@@ -71,7 +71,7 @@ mover_pcaps() {
     done
 
     # Aseguramos que el usuario tenga permisos sobre los archivos
-    sudo chown rmorales:rmorales "$LOG_DIR"/*.pcap
+    sudo chown $USER:$USER "$LOG_DIR"/*.pcap
 
     echo "✅ Todos los archivos .pcap fueron movidos"
 }
@@ -124,7 +124,7 @@ for RMW in "${RMW_LIST[@]}"; do
         cd ~/ros2_ws
         source install/setup.zsh
         echo "🔧 Arrancando bridge Zenoh sobre rmw_cyclonedds_cpp..."
-        ros2 run zenoh_bridge_ros2dds zenoh_bridge_ros2dds > /dev/null 2>&1 &
+        zenoh-bridge-ros2dds > /dev/null 2>&1 &
         ZENOH_BRIDGE_PID=$!
         sleep 2
     fi
@@ -223,10 +223,6 @@ for RMW in "${RMW_LIST[@]}"; do
     wait $DELAY_LIDAR_PID
     wait $BW_IMAGE_PID
     wait $BW_LIDAR_PID
-
-
-    # sleep 24
-
 
     # Cerramos RViz para cargar la otra configuración
     kill $RVIZ_PID
@@ -353,7 +349,6 @@ for RMW in "${RMW_LIST[@]}"; do
     if [ "$RMW" = "rmw_zenoh_cpp" ]; then
         sleep 2
         pkill -f zenoh
-        # kill $ZENOH_PID
         sleep 1
         while pgrep -f rmw_zenohd > /dev/null; do
             echo "⏳ Esperando que router zenoh termine..."
@@ -366,7 +361,6 @@ for RMW in "${RMW_LIST[@]}"; do
     if [ "$RMW" = "zenoh-bridge" ]; then
         sleep 2
         pkill -f /zenoh_bridge_ros2dds
-        # kill $ZENOH_PID
         sleep 1
         while pgrep -f /zenoh_bridge_ros2dds > /dev/null; do
             echo "⏳ Esperando que zenoh-bridge termine..."
