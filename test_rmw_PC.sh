@@ -360,7 +360,7 @@ for RMW in "${RMW_LIST[@]}"; do
 
     if [ "$RMW" = "zenoh-bridge" ]; then
         sleep 2
-        pkill -f /zenoh_bridge_ros2dds
+        pkill -f /zenoh
         sleep 1
         while pgrep -f /zenoh_bridge_ros2dds > /dev/null; do
             echo "⏳ Esperando que zenoh-bridge termine..."
